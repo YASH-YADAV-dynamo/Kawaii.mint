@@ -7,11 +7,13 @@ const AccountDetailFeature = lazy(() => import('../components/account/account-de
 const ClusterFeature = lazy(() => import('../components/cluster/cluster-feature'))
 const BasicFeature = lazy(() => import('../components/basic/basic-feature'))
 const DashboardFeature = lazy(() => import('../components/dashboard/dashboard-feature'))
+const Coins = lazy(() => import('../components/coins/coins'))
 
 const links: { label: string; path: string }[] = [
   { label: 'Account', path: '/account' },
   { label: 'Clusters', path: '/clusters' },
   { label: 'Basic Program', path: '/basic' },
+  { label: 'Coins', path: '/coins' },
 ]
 
 const routes: RouteObject[] = [
@@ -19,6 +21,7 @@ const routes: RouteObject[] = [
   { path: '/account/:address', element: <AccountDetailFeature /> },
   { path: '/basic', element: <BasicFeature /> },
   { path: '/clusters', element: <ClusterFeature /> },
+  { path: '/coins', element: <Coins /> },
 ]
 
 export function AppRoutes() {
