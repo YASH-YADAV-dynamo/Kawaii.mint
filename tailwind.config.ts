@@ -7,7 +7,12 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      borderWidth: {
+        // 11: "5px",
+        1: "1px", 
+      },
+    },
   },
   plugins: [require('daisyui')],
 }
