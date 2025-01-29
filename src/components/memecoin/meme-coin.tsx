@@ -40,6 +40,7 @@ const App: React.FC = () => {
           {
             params: {
               vs_currency: "usd",
+              category: "meme-token",
               order: "market_cap_desc",
               per_page: 10, // 10 coins per page
               page: page,
