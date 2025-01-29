@@ -1,11 +1,9 @@
 
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ReactApexChart from "react-apexcharts";
 import { FaArrowLeft } from "react-icons/fa6";
-import { WalletButton } from '../solana/solana-provider';
-import ReactLoading from "react-loading"; // Import the loader component
+import ReactLoading from "react-loading"; // Import react-loading
 
 interface Coin {
   id: string;
@@ -21,6 +19,7 @@ const App: React.FC = () => {
   const [selectedCoin, setSelectedCoin] = useState<string | null>(null);
   const [candlestickData, setCandlestickData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [globalLoading, setGlobalLoading] = useState(true); // Loader for initial data fetch
   const [timeframe, setTimeframe] = useState("1d"); // Default timeframe
   const [amount, setAmount] = useState<number>(0); // Amount user wants to spend
   const [page, setPage] = useState<number>(1); // Current page number
@@ -33,9 +32,8 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    // Fetch cryptocurrency list from CoinGecko API
     const fetchCoins = async () => {
-      setLoading(true); // Show loading spinner while fetching data
+      setGlobalLoading(true); // Show global loader while fetching data
       try {
         const res = await axios.get(
           "https://api.coingecko.com/api/v3/coins/markets",
@@ -43,28 +41,28 @@ const App: React.FC = () => {
             params: {
               vs_currency: "usd",
               order: "market_cap_desc",
-              per_page: 20, // 10 coins per page
+              per_page: 10, // 10 coins per page
               page: page,
               sparkline: false,
             },
           }
         );
         setCoins(res.data);
+        setGlobalLoading(false);
       } catch (error) {
         console.error("Error fetching coins:", error);
       } finally {
-        setLoading(false); // Hide loading spinner once data is fetched
+        setGlobalLoading(false); // Hide loader after data is fetched
       }
     };
 
     fetchCoins();
-  }, [page]); // Re-fetch coins when page changes
+  }, [page]);
 
   useEffect(() => {
     if (selectedCoin) {
-      // Fetch candlestick data from Binance API
       const fetchCandlestickData = async () => {
-        setLoading(true); // Show loading spinner while fetching data
+        setLoading(true);
         try {
           const symbol = `${selectedCoin.toLowerCase()}usdt`;
           const interval = timeframes[timeframe];
@@ -80,13 +78,13 @@ const App: React.FC = () => {
           );
           const data = res.data.map((candle: any) => ({
             x: new Date(candle[0]),
-            y: [candle[1], candle[2], candle[3], candle[4]].map(parseFloat), // [open, high, low, close]
+            y: [candle[1], candle[2], candle[3], candle[4]].map(parseFloat),
           }));
           setCandlestickData(data);
         } catch (error) {
           console.error("Error fetching candlestick data:", error);
         } finally {
-          setLoading(false); // Hide loading spinner once data is fetched
+          setLoading(false);
         }
       };
 
@@ -132,31 +130,32 @@ const App: React.FC = () => {
 
   return (
     <div className="p-4">
-      {!selectedCoin ? (
+      {globalLoading ? (
+        <div className="flex justify-center items-center h-screen">
+          <ReactLoading type="bars" color="#4f46e5" height={100} width={100} />
+          <p className="text-lg text-gray-700 font-semibold ml-4">Loading cryptocurrencies...</p>
+        </div>
+      ) : !selectedCoin ? (
         <div>
           <h1 className="text-2xl font-bold mb-4">Crypto Coins</h1>
-          {loading ? (
-            <ReactLoading type="bars" color="#000" height={50} width={50} />
-          ) : (
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8 gap-6">
-              {coins.map((coin) => (
-                <li
-                  key={coin.id}
-                  className="p-4 border-1 border-slate-800 hover:border-slate-700 rounded shadow cursor-pointer hover:shadow-lg hover:border-2"
-                  onClick={() => setSelectedCoin(coin.symbol)}
-                >
-                  <img
-                    src={coin.image}
-                    alt={coin.name}
-                    className="h-16 w-16 mx-auto mb-2"
-                  />
-                  <h2 className="text-lg font-semibold">{coin.name}</h2>
-                  <p>Price: ${coin.current_price.toFixed(2)}</p>
-                  <p>Market Cap: ${coin.market_cap.toLocaleString()}</p>
-                </li>
-              ))}
-            </ul>
-          )}
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8 gap-6">
+            {coins.map((coin) => (
+              <li
+                key={coin.id}
+                className="p-4 border-1 border-slate-800 hover:border-slate-700 rounded shadow cursor-pointer hover:shadow-lg hover:border-2"
+                onClick={() => setSelectedCoin(coin.symbol)}
+              >
+                <img
+                  src={coin.image}
+                  alt={coin.name}
+                  className="h-16 w-16 mx-auto mb-2"
+                />
+                <h2 className="text-lg font-semibold">{coin.name}</h2>
+                <p>Price: ${coin.current_price.toFixed(2)}</p>
+                <p>Market Cap: ${coin.market_cap.toLocaleString()}</p>
+              </li>
+            ))}
+          </ul>
           <div className="flex justify-between mt-6">
             <button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
@@ -176,7 +175,6 @@ const App: React.FC = () => {
         </div>
       ) : (
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* Left: Candlestick Chart */}
           <div className="flex-1">
             <div className="mb-4 flex justify-between items-center">
               <button
@@ -205,8 +203,9 @@ const App: React.FC = () => {
               </div>
             </div>
             {loading ? (
-              <div className="flex justify-center items-center">
-                <ReactLoading type="bars" color="#000" height={50} width={50} />
+              <div className="flex justify-center items-center h-64">
+                <ReactLoading type="bars" color="#4f46e5" height={100} width={100} />
+                <p className="text-lg text-gray-700 font-semibold ml-4">Loading chart data...</p>
               </div>
             ) : candlestickData.length > 0 ? (
               <div className="w-full h-[500px]">
@@ -223,7 +222,6 @@ const App: React.FC = () => {
             )}
           </div>
 
-          {/* Right: Buy/Sell Section */}
           <div className="w-full lg:w-1/4 p-4 rounded shadow">
             <h2 className="text-xl font-bold mb-4">Buy/Sell {selectedCoin?.toUpperCase()}</h2>
             <div className="mb-4">
@@ -238,7 +236,7 @@ const App: React.FC = () => {
             </div>
             <div className="mb-4">
               <p>
-                You will get:{" "}
+                You will get: {" "}
                 <span className="font-bold">
                   {amount /
                     (coins.find((coin) => coin.symbol === selectedCoin)?.current_price || 1)}{" "}
@@ -250,9 +248,7 @@ const App: React.FC = () => {
               <button
                 onClick={handleBuy}
                 className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                {/* <WalletButton className="bg-blue-500 text-white p-4 rounded hover:bg-blue-600 text-xs" /> */}
-
+              > 
                 Buy
               </button>
               <button
@@ -270,7 +266,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
-
-
