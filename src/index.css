@@ -8,6 +8,7 @@ body,
   height: 100%;
   width: 100%;
   background-color: #0a0613 !important;
+  overflow-x: hidden;
 }
 
 .wallet-adapter-button-trigger {
@@ -19,4 +20,19 @@ body,
 .wallet-adapter-dropdown-list,
 .wallet-adapter-button {
   font-family: inherit !important;
+}
+
+/* Tailwind custom CSS for smooth looping marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Apply the animation to the flex container */
+.animate-marquee {
+  animation: marquee 20s linear infinite;
 }

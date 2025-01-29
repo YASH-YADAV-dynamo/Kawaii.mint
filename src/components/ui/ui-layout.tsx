@@ -154,3 +154,112 @@ export function useTransactionToast() {
     )
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+// import { ReactNode, Suspense, useEffect, useRef, useState } from 'react'
+// import toast, { Toaster } from 'react-hot-toast'
+// import { Link, useLocation } from 'react-router-dom'
+// import axios from 'axios'
+
+// import { AccountChecker } from '../account/account-ui'
+// import { ClusterChecker, ClusterUiSelect, ExplorerLink } from '../cluster/cluster-ui'
+// import { WalletButton } from '../solana/solana-provider'
+
+// export function UiLayout({ children, links }: { children: ReactNode; links: { label: string; path: string }[] }) {
+//   const pathname = useLocation().pathname
+//   const [cryptoData, setCryptoData] = useState<any[]>([])
+
+//   useEffect(() => {
+//     const fetchCryptoData = async () => {
+//       try {
+//         const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+//           params: {
+//             vs_currency: 'usd',
+//             ids: 'bitcoin,ethereum,cardano,litecoin', // Add more coin IDs as needed
+//             order: 'percent_change_24h', // Order by 24h change percentage
+//             price_change_percentage: '24h',
+//           },
+//         })
+//         setCryptoData(response.data)
+//       } catch (error) {
+//         console.error('Error fetching crypto data', error)
+//       }
+//     }
+
+//     fetchCryptoData()
+//     const intervalId = setInterval(fetchCryptoData, 60000) // Refresh every 1 minute
+//     return () => clearInterval(intervalId)
+//   }, [])
+
+//   return (
+//     <div className="h-full flex flex-col">
+//       <div className="navbar bg-purple-950/30 dark:text-neutral-content flex-col md:flex-row space-y-2 md:space-y-0">
+//         <div className="flex-1">
+//           <Link className="btn btn-ghost normal-case text-xl" to="/">
+//             KawaiiMint
+//           </Link>
+//           <ul className="menu menu-horizontal px-1 space-x-2">
+//             {links.map(({ label, path }) => (
+//               <li key={path}>
+//                 <Link className={pathname.startsWith(path) ? 'active' : ''} to={path}>
+//                   {label}
+//                 </Link>
+//               </li>
+//             ))}
+//           </ul>
+//         </div>
+//         <div className="flex-none space-x-2">
+//           <WalletButton />
+//           <ClusterUiSelect />
+//         </div>
+//       </div>
+
+//       {/* Marquee Section Below the Header */}
+//       <div className="bg-gray-800 p-2 text-white">
+//         <div className="overflow-x-auto whitespace-nowrap">
+//           <div className="inline-block space-x-6">
+//             {cryptoData.map((coin: any) => {
+//               const profitLossSign = coin.price_change_percentage_24h >= 0 ? '🟢' : '🔴'
+//               const percentageChange = coin.price_change_percentage_24h.toFixed(2)
+//               return (
+//                 <span key={coin.id} className="mr-6">
+//                   <img src={coin.image} alt={coin.name} className="inline-block w-8 h-8" />
+//                   <span className="ml-2">{coin.name}</span>
+//                   <span className="ml-2">{profitLossSign} {percentageChange}%</span>
+//                 </span>
+//               )
+//             })}
+//           </div>
+//         </div>
+//       </div>
+
+//       <ClusterChecker>
+//         <AccountChecker />
+//       </ClusterChecker>
+
+//       <div className="flex-grow mx-4 lg:mx-auto">
+//         <Suspense
+//           fallback={
+//             <div className="text-center my-32">
+//               <span className="loading loading-spinner loading-lg"></span>
+//             </div>
+//           }
+//         >
+//           {children}
+//         </Suspense>
+//         <Toaster position="bottom-right" />
+//       </div>
+//     </div>
+//   )
+// }
+
+// // The other components remain unchanged
