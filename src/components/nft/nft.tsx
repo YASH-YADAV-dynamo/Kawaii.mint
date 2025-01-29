@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, X, Loader2 } from 'lucide-react';
+import { WalletButton } from '../solana/solana-provider'
 
 const SimpleNFTForm = () => {
   const [formData, setFormData] = useState({
@@ -65,6 +66,7 @@ const SimpleNFTForm = () => {
         setMessage(`Minting NFT... Your meme has ${fakeLikes} likes!`);
         await new Promise(resolve => setTimeout(resolve, 1500));
         setMessage('NFT created successfully! 🎉');
+        <WalletButton/>
       } else {
         setMessage(`The shared meme isn't popular enough (${fakeLikes} likes). Need at least 2000 likes.`);
       }
