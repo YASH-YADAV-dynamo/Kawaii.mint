@@ -921,18 +921,6 @@ const KawaiiMintHome = () => {
   // Fetch crypto data
   const fetchCryptoData = async () => {
     try {
-      // const response = await fetch(
-      //   'https://api.coingecko.com/api/v3/coins/markets?' +
-      //   new URLSearchParams({
-      //     vs_currency: 'usd',
-      //     ids: 'dogecoin,shiba-inu,pepe,floki',
-      //     order: 'market_cap_desc',
-      //     per_page: '20',
-      //     page: '1',
-      //     sparkline: 'false',
-      //     price_change_percentage: '24h'
-      //   })
-      // );
 
       const response = await fetch(
         'https://api.coingecko.com/api/v3/coins/markets?' +
@@ -1051,7 +1039,7 @@ const KawaiiMintHome = () => {
         </div>
 
         {/* Rest of the content remains the same */}
-        <div className="max-w-7xl mx-auto px-4 pt-24 pb-16 flex-col mt-20">
+        <div className="max-w-7xl mx-auto px-4 pt-24 pb-16 flex-col absolute ml-28 mt-20">
           <div className="text-center mb-32">
             <h1 className="text-7xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
               Kawaii.Mint

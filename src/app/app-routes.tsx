@@ -9,6 +9,8 @@ const BasicFeature = lazy(() => import('../components/basic/basic-feature'))
 const DashboardFeature = lazy(() => import('../components/dashboard/dashboard-feature'))
 const Coins = lazy(() => import('../components/coins/coins'))
 const MemeCoins = lazy(() => import('../components/memecoin/meme-coin'))
+const Nft = lazy(() => import('../components/nft/nft'))
+
 
 const links: { label: string; path: string }[] = [
   { label: 'Account', path: '/account' },
@@ -16,6 +18,7 @@ const links: { label: string; path: string }[] = [
   { label: 'Basic Program', path: '/basic' },
   { label: 'Coins', path: '/coins' },
   { label: 'MemeCoins', path: '/memecoins' },
+  { label: 'Nft', path: '/nft' },
 ]
 
 const routes: RouteObject[] = [
@@ -25,6 +28,7 @@ const routes: RouteObject[] = [
   { path: '/clusters', element: <ClusterFeature /> },
   { path: '/coins', element: <Coins /> },
   { path: '/memecoins', element: <MemeCoins /> },
+  { path: '/nft', element: <Nft /> },
 ]
 
 export function AppRoutes() {
