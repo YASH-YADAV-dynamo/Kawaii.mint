@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, X, Loader2 } from 'lucide-react';
 import { WalletButton } from '../solana/solana-provider'
+import { toast } from 'react-hot-toast';
 
 const SimpleNFTForm = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ const SimpleNFTForm = () => {
         setImagePreview(reader.result);
         setIsLoading(false);
         setMessage('Image uploaded successfully!');
-        setTimeout(() => setMessage(''), 2000);
+        setTimeout(() => setMessage(''), 10000);
       };
       reader.readAsDataURL(file);
     }
@@ -66,7 +67,10 @@ const SimpleNFTForm = () => {
         setMessage(`Minting NFT... Your meme has ${fakeLikes} likes!`);
         await new Promise(resolve => setTimeout(resolve, 1500));
         setMessage('NFT created successfully! 🎉');
-        <WalletButton/>
+        toast.success('NFT created successfully! 🎉, Check your Transaction on this Url https://explorer.solana.com/address/3Sdhi2KDhBiZWQHWrYhb8QZuXh5NrQ7xM2TbEaidFAiX?cluster=testnet.', {
+                      position: 'bottom-right',
+                      autoClose: 5000,
+                    })
       } else {
         setMessage(`The shared meme isn't popular enough (${fakeLikes} likes). Need at least 2000 likes.`);
       }
