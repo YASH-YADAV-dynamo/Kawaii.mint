@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar } from "@/components/ui/calendar";
 import { Upload, X, Loader2 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const SimpleNFTForm = () => {
   const [formData, setFormData] = useState({
@@ -13,13 +11,12 @@ const SimpleNFTForm = () => {
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [message, setMessage] = useState('');
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Show loading while processing image
       setIsLoading(true);
       setFile(file);
       const reader = new FileReader();
@@ -51,30 +48,25 @@ const SimpleNFTForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
     const error = validateForm();
     if (error) {
       setMessage(error);
       return;
     }
 
-    // Start loading
     setIsLoading(true);
     setMessage('Processing your NFT...');
 
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulate checking tweet likes
       const fakeLikes = Math.floor(Math.random() * 3000);
       
       if (fakeLikes >= 2000) {
-        setMessage('Minting NFT... Your meme has ' + fakeLikes + ' likes!');
+        setMessage(`Minting NFT... Your meme has ${fakeLikes} likes!`);
         await new Promise(resolve => setTimeout(resolve, 1500));
         setMessage('NFT created successfully! 🎉');
       } else {
-        setMessage(The shared meme isn't popular enough (${fakeLikes} likes). Need at least 2000 likes.);
+        setMessage(`The shared meme isn't popular enough (${fakeLikes} likes). Need at least 2000 likes.`);
       }
     } catch (error) {
       setMessage('Error processing NFT. Please try again.');
@@ -168,29 +160,15 @@ const SimpleNFTForm = () => {
               />
             </div>
 
-            <div className="relative">
+            <div>
               <label className="block text-sm font-medium mb-2">Launch Date</label>
               <input
-                type="text"
-                value={formData.launchDate.toLocaleDateString()}
-                onClick={() => !isLoading && setShowCalendar(!showCalendar)}
-                readOnly
-                className="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 cursor-pointer transition-colors"
+                type="date"
+                value={formData.launchDate?.toISOString().split('T')[0]}
+                onChange={(e) => setFormData(prev => ({ ...prev, launchDate: new Date(e.target.value) }))}
+                className="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                 disabled={isLoading}
               />
-              {showCalendar && (
-                <div className="absolute z-10 mt-2 bg-gray-800 rounded-lg p-2 shadow-xl">
-                  <Calendar
-                    mode="single"
-                    selected={formData.launchDate}
-                    onSelect={(date) => {
-                      setFormData(prev => ({ ...prev, launchDate: date }));
-                      setShowCalendar(false);
-                    }}
-                    className="rounded-md border"
-                  />
-                </div>
-              )}
             </div>
 
             <button
@@ -211,11 +189,11 @@ const SimpleNFTForm = () => {
             </button>
 
             {message && (
-              <Alert className={`transition-all ${
+              <div className={`p-4 rounded-lg transition-all ${
                 message.includes('error') ? 'bg-red-900/20' : 'bg-gray-700/50'
               }`}>
-                <AlertDescription>{message}</AlertDescription>
-              </Alert>
+                <p>{message}</p>
+              </div>
             )}
           </form>
         </div>
